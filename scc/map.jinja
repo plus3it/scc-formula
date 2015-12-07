@@ -1,0 +1,15 @@
+{#- Initialize 'scc' dictionary with default settings for the scc formula -#}
+
+{%- load_yaml as scc -%}
+version: ''
+clean: True
+{%- endload -%}
+
+{#- Over-ride defaults with user-defined settings from pillar (if available)
+-#}
+
+{%- do scc.update(salt['pillar.get'](
+    'scc:lookup',
+    scc,
+    merge=True))
+-%}
