@@ -1,8 +1,7 @@
 {#- Initialize 'scc' dictionary with default settings for the scc formula -#}
 
 {%- load_yaml as scc -%}
-version: ''
-clean: True
+version: '4.0.1'
 {%- endload -%}
 
 {#- Over-ride defaults with user-defined settings from pillar (if available)
@@ -13,3 +12,18 @@ clean: True
     scc,
     merge=True))
 -%}
+
+# Get the SYSTEMROOT value from the registry
+{% set systemroot = salt['reg.read_value'](
+    'HKEY_LOCAL_MACHINE',
+    'SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion',
+    'SystemRoot').vdata %}
+
+# Get the directory corresponding to the %programfilesx86% env variable
+{% set programfilesx86 = salt['cmd.run'](
+    '${env:ProgramFiles(x86)}', shell='powershell') %}
+
+{%- do scc.update({
+    'cwd' : programfilesx86 ~ '\\SCAP Compliance Checker ' ~ scc.version,
+    'cachedir' : opts['cachedir'] ~ '\\files\\base\\scc\\sccfiles',
+}) -%}

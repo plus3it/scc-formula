@@ -1,4 +1,4 @@
-{%- from "scc/map.jinja" import scc with context -%}
+{%- from tpldir ~ '/map.jinja' import scc with context %}
 
 {#- Install SCC -#}
 Install SCC:
