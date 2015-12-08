@@ -1,0 +1,7 @@
+scc:
+  lookup:
+    version: '4.0.1'
+    outputdir: ''
+    content:
+      - source: 'https://path/to/scap-content.zip'
+        source_hash: 'https://path/to/scap-content.zip.HASH'
