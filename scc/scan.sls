@@ -8,28 +8,32 @@ include:
   file.directory:
     - name: '{{ scc.outputdir }}'
     - makedirs: True
+    - require_in:
+      - pkg: 'Install SCC'
 {%- endif %}
 
 {%- for content in scc.get('content', []) %}
 {%- set name = content.source.split('/')[-1] %}
-{%- set fullname = scc.cachedir ~ '\\' ~ name %}
+{%- set fullname = scc.cachedir ~ scc.ossep ~ name %}
 'Manage {{ name }}':
   file.managed:
     - name: '{{ fullname }}'
     - source: {{ content.source }}
     - source_hash: {{ content.source_hash }}
     - makedirs: True
+    - require:
+      - pkg: 'Install SCC'
 
 'Disable content other than {{ name }}':
   cmd.run:
-    - name: cscc.bat -da -q
+    - name: {{ scc.cmd }} -da -q
     - cwd: '{{ scc.cwd }}'
     - require:
       - pkg: 'Install SCC'
 
 'Analyze {{ name }}':
   cmd.run:
-    - name: cscc.bat -isr {{ fullname }} -q {% if scc.outputdir -%} -u {{ scc.outputdir }} {%- endif %}
+    - name: {{ scc.cmd }} -isr {{ fullname }} -q {% if scc.outputdir -%} -u {{ scc.outputdir }} {%- endif %}
     - cwd: '{{ scc.cwd }}'
     - require:
       - cmd: 'Disable content other than {{ name }}'

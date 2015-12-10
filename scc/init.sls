@@ -3,8 +3,12 @@
 {#- Install SCC -#}
 Install SCC:
   pkg.installed:
-    - name: 'scc'
+    - name: {{ scc.name }}
 {%- if scc.version %}
     - version: {{ scc.version }}
+{%- endif %}
+{%- if scc.pkg %}
+    - sources:
+      - {{ scc.name }}: {{ scc.pkg.source }}
 {%- endif %}
     - allow_updates: True
