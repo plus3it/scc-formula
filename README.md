@@ -1,7 +1,7 @@
 # scc-formula
-Salt formula to install and configure the SCAP Compliance Checker for Windows
+Salt formula to install and configure the SCAP Compliance Checker
 
-## IMPORTANT:
+## IMPORTANT
 
 The SCAP Compliance Checker is not a publicly available software package. You
 must have a U.S. Government CAC, or a .gov or .mil email address, to get access
@@ -11,14 +11,17 @@ to the software. See the site below for details.
 
 ## Dependencies
 
-- Package definition for SCC must be available in the winrepo database. The
-installer can be obtained from the site(s) listed above.
+- **Windows**: Package definition for SCC must be available in the winrepo
+database. The installer can be obtained from the site(s) listed above.
+- **Linux**: Package definition for SCC must be in an available yum repo, or
+the rpm must be hosted at the url specified by the pillar
+`scc:lookup:pkg:source`.
 
 ## Available States
 
 ### scc
 
-Install SCAP Compliance Checker for Windows
+Install SCAP Compliance Checker
 
 ### scc.scan
 
@@ -32,15 +35,19 @@ will be performed.
 
 
 ## Configuration
-Every option available in the SCC formula can be set in pillar. Below is an
+Every option available in the SCC formula can be set via pillar. Below is an
 example pillar configuration.
 
 ```
     scc:
       lookup:
         version: '4.0.1'
-        outputdir: 'C:\path\to\scap\results'
+        outputdir: ''
+        pkg:
+          source: https://url/to/scc.rpm
         content:
-          - source: 'https://path/to/scap-content.zip'
-            source_hash: 'https://path/to/scap-content.zip.HASH'
+          - source: https://url/to/scap-benchmark1.zip
+            source_hash: https://url/to/scap-benchmark1.zip.HASH
+          - source: https://url/to/scap-benchmark2.zip
+            source_hash: https://url/to/scap-benchmark2.zip.HASH
 ```
