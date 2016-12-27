@@ -4,11 +4,10 @@
     with 'base', and merged with the pillar dictionary 'scc:lookup'.
 -#}
 
-{%- set version = salt.pillar.get('scc:lookup:version', '4.0.1') -%}
+{%- set version = salt.pillar.get('scc:lookup:version', '') -%}
 
 {%- set scc = salt['grains.filter_by']({
     'base': {
-        'version' : version,
         'outputdir' : '',
         'content' : [],
         'pkg' : {},
@@ -19,13 +18,15 @@
         'cmd' : 'cscc.bat',
         'cachedir' : opts['cachedir'] ~ '\\files\\base\\scc\\sccfiles',
         'ossep' : '\\',
+        'version' : version,
     },
     'RedHat' : {
         'name' : 'spawarscc',
         'cwd' : '/opt/scc',
         'cmd' : './cscc',
         'cachedir' : opts['cachedir'] ~ '/files/base/scc/sccfiles',
-        'ossep' : '/'
+        'ossep' : '/',
+        'version' : '',
     } },
     grain='os_family',
     merge=salt['pillar.get']('scc:lookup', {}),
