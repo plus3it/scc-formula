@@ -12,3 +12,4 @@ Install SCC:
       - {{ scc.name }}: {{ scc.pkg.source }}
 {%- endif %}
     - allow_updates: True
+    - skip_verify: True
