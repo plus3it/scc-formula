@@ -26,15 +26,14 @@ include:
 
 'Disable content other than {{ name }}':
   cmd.run:
-    - name: {{ scc.cmd }} -da -q
-    - cwd: '{{ scc.cwd }}'
+    - name: '"{{ scc.cmd }}" -da -q'
     - require:
       - pkg: 'Install SCC'
 
 'Analyze {{ name }}':
-  cmd.run:
-    - name: {{ scc.cmd }} -isr {{ fullname }} -q {% if scc.outputdir -%} -u {{ scc.outputdir }} {%- endif %}
-    - cwd: '{{ scc.cwd }}'
+  cmd.script:
+    - name: {{ scc.retry_script }}
+    - args: '5 "{{ scc.cmd }}" -isr {{ fullname }} -q {% if scc.outputdir -%} -u "{{ scc.outputdir }}" {%- endif %}'
     - require:
       - cmd: 'Disable content other than {{ name }}'
       - file: 'Manage {{ name }}'
